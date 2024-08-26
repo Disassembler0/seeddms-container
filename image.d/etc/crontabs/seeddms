@@ -1,0 +1,1 @@
+*/10 * * * * /srv/seeddms/seeddms/utils/seeddms-indexer >/dev/null

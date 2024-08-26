@@ -1,0 +1,4 @@
+#!/bin/execlineb -P
+
+/bin/export LD_PRELOAD /usr/lib/preloadable_libiconv.so
+/usr/sbin/php-fpm7 -F

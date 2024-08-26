@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <site>
+        <display siteName="DMS" footNote="" printDisclaimer="true" language="cs_CZ" theme="bootstrap" previewWidthList="600" previewWidthDetail="600" availablelanguages="" showFullPreview="true" convertToPdf="true"/>
+        <edition strictFormCheck="false" viewOnlineFileTypes=".txt;.text;.html;.htm;.xml;.pdf;.gif;.png;.jpg;.jpeg" enableConverting="true" enableEmail="true" enableUsersView="true" enableFullSearch="true" enableFolderTree="true" expandFolderTree="1" enableLanguageSelector="true" stopWordsFile="" sortUsersInList="" sortFoldersDefault="n" editOnlineFileTypes="" enableSessionList="false" enableClipboard="true" enableMenuTasks="true" enableDropUpload="true" enableMultiUpload="true" enableRecursiveCount="true" maxRecursiveCount="0" enableHelp="false" enableThemeSelector="false" maxSizeForFullText="0" fullSearchEngine="lucene" defaultSearchMethod="database" showSingleSearchHit="false" enableDropFolderList="true"/>
+        <calendar enableCalendar="true" calendarDefaultView="w" firstDayOfWeek="1"/>
+    </site>
+    <system>
+        <server rootDir="/srv/seeddms/www/" httpRoot="/" contentDir="/srv/seeddms/data/" stagingDir="/srv/seeddms/data/staging/" luceneDir="/srv/seeddms/data/lucene/" logFileEnable="true" logFileRotation="d" enableLargeFileUpload="true" partitionSize="2000000" dropFolderDir="" cacheDir="/srv/seeddms/data/cache/" maxUploadSize=""/>
+        <authentication enableGuestLogin="false" enablePasswordForgotten="true" restricted="true" enableUserImage="false" disableSelfEdit="false" passwordStrength="0" passwordExpiration="0" passwordHistory="0" passwordStrengthAlgorithm="advanced" loginFailure="0" encryptionKey="" enableGuestAutoLogin="false" autoLoginUser="0" quota="0" undelUserIds="" cookieLifetime="0" defaultAccessDocs="0">
+            <connectors>
+                <connector enable="false" type="ldap" host="ldaps://ldap.host.com" port="389" baseDN="" bindDN="" bindPw="" filter=""/>
+                <connector enable="false" type="AD" host="ldap.example.com" port="389" baseDN="" accountDomainName="example.com" bindDN="" bindPw=""/>
+            </connectors>
+        </authentication>
+        <database dbDriver="pgsql" dbHostname="" dbDatabase="" dbUser="" dbPass="" doNotCheckVersion="false"/>
+        <smtp smtpServer="" smtpPort="" smtpSendFrom="" smtpUser="" smtpPassword=""/>
+    </system>
+    <advanced>
+        <display siteDefaultPage="" rootFolderID="1" titleDisplayHack="true" showMissingTranslations="false"/>
+        <authentication guestID="2" adminIP=""/>
+        <edition enableAdminRevApp="false" versioningFileName="versioning_info.txt" workflowMode="advanced" enableVersionDeletion="true" enableVersionModification="true" enableDuplicateDocNames="true" enableOwnerRevApp="false" enableSelfRevApp="false" enableUpdateRevApp="false" presetExpirationDate="" overrideMimeType="false" removeFromDropFolder="false"/>
+        <notification enableNotificationAppRev="true" enableOwnerNotification="false" enableNotificationWorkflow="false"/>
+        <server coreDir="" luceneClassDir="" contentOffsetDir="1048576" maxDirID="0" updateNotifyTime="86400" extraPath="/srv/seeddms/pear" cmdTimeout="30" maxExecutionTime="7200"/>
+        <converters target="fulltext">
+            <converter mimeType="application/pdf">pdftotext -enc UTF-8 -nopgbrk %s -</converter>
+            <converter mimeType="text/rtf">unoconv -d document -f txt --stdout %s</converter>
+            <converter mimeType="application/msword">unoconv -d document -f txt --stdout %s</converter>
+            <converter mimeType="application/vnd.oasis.opendocument.text">unoconv -d document -f txt --stdout %s</converter>
+            <converter mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document">unoconv -d document -f txt --stdout %s</converter>
+            <converter mimeType="application/vnd.ms-excel">unoconv -d spreadsheet -f csv --stdout %s</converter>
+            <converter mimeType="application/vnd.oasis.opendocument.spreadsheet">unoconv -d spreadsheet -f csv --stdout %s</converter>
+            <converter mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">unoconv -d spreadsheet -f csv --stdout %s</converter>
+            <converter mimeType="application/vnd.ms-powerpoint">unoconv -d presentation -f pdf --stdout %s | pdftotext -enc UTF-8 -nopgbrk - -</converter>
+            <converter mimeType="application/vnd.oasis.opendocument.presentation">unoconv -d presentation -f pdf --stdout %s | pdftotext -enc UTF-8 -nopgbrk - -</converter>
+            <converter mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation">unoconv -d presentation -f pdf --stdout %s | pdftotext -enc UTF-8 -nopgbrk - -</converter>
+            <converter mimeType="text/html">unoconv -d document -f txt --stdout %s</converter>
+            <converter mimeType="text/plain">cat %s</converter>
+        </converters>
+        <converters target="preview">
+            <converter mimeType="image/png">convert -resize %wx '%f' '%o'</converter>
+            <converter mimeType="image/gif">convert -resize %wx '%f' '%o'</converter>
+            <converter mimeType="image/jpg">convert -resize %wx '%f' '%o'</converter>
+            <converter mimeType="image/jpeg">convert -resize %wx '%f' '%o'</converter>
+            <converter mimeType="image/svg+xml">convert -resize %wx '%f' '%o'</converter>
+            <converter mimeType="application/pdf">convert -density 100 -resize %wx '%f[0]' '%o'</converter>
+            <converter mimeType="text/rtf">unoconv -d document -e PageRange=1-1 -f pdf --stdout '%f' | gs -dBATCH -dNOPAUSE -sDEVICE=pngalpha -dPDFFitPage -r72 -sOutputFile=- -q - | convert -resize %wx png:- '%o'</converter>
+            <converter mimeType="application/msword">unoconv -d document -e PageRange=1-1 -f pdf --stdout '%f' | gs -dBATCH -dNOPAUSE -sDEVICE=pngalpha -dPDFFitPage -r72 -sOutputFile=- -q - | convert -resize %wx png:- '%o'</converter>
+            <converter mimeType="application/vnd.oasis.opendocument.text">unoconv -d document -e PageRange=1-1 -f pdf --stdout '%f' | gs -dBATCH -dNOPAUSE -sDEVICE=pngalpha -dPDFFitPage -r72 -sOutputFile=- -q - | convert -resize %wx png:- '%o'</converter>
+            <converter mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document">unoconv -d document -e PageRange=1-1 -f pdf --stdout '%f' | gs -dBATCH -dNOPAUSE -sDEVICE=pngalpha -dPDFFitPage -r72 -sOutputFile=- -q - | convert -resize %wx png:- '%o'</converter>
+            <converter mimeType="application/vnd.ms-excel">unoconv -d spreadsheet -e PageRange=1-1 -f pdf --stdout '%f' | gs -dBATCH -dNOPAUSE -sDEVICE=pngalpha -dPDFFitPage -r72 -sOutputFile=- -q - | convert -resize %wx png:- '%o'</converter>
+            <converter mimeType="application/vnd.oasis.opendocument.spreadsheet">unoconv -d spreadsheet -e PageRange=1-1 -f pdf --stdout '%f' | gs -dBATCH -dNOPAUSE -sDEVICE=pngalpha -dPDFFitPage -r72 -sOutputFile=- -q - | convert -resize %wx png:- '%o'</converter>
+            <converter mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">unoconv -d spreadsheet -e PageRange=1-1 -f pdf --stdout '%f' | gs -dBATCH -dNOPAUSE -sDEVICE=pngalpha -dPDFFitPage -r72 -sOutputFile=- -q - | convert -resize %wx png:- '%o'</converter>
+            <converter mimeType="application/vnd.ms-powerpoint">unoconv -d presentation -e PageRange=1-1 -f pdf --stdout '%f' | gs -dBATCH -dNOPAUSE -sDEVICE=pngalpha -dPDFFitPage -r72 -sOutputFile=- -q - | convert -resize %wx png:- '%o'</converter>
+            <converter mimeType="application/vnd.oasis.opendocument.presentation">unoconv -d presentation -e PageRange=1-1 -f pdf --stdout '%f' | gs -dBATCH -dNOPAUSE -sDEVICE=pngalpha -dPDFFitPage -r72 -sOutputFile=- -q - | convert -resize %wx png:- '%o'</converter>
+            <converter mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation">unoconv -d presentation -e PageRange=1-1 -f pdf --stdout '%f' | gs -dBATCH -dNOPAUSE -sDEVICE=pngalpha -dPDFFitPage -r72 -sOutputFile=- -q - | convert -resize %wx png:- '%o'</converter>
+            <converter mimeType="text/html">unoconv -d document -e PageRange=1-1 -f pdf --stdout '%f' | gs -dBATCH -dNOPAUSE -sDEVICE=pngalpha -dPDFFitPage -r72 -sOutputFile=- -q - | convert -resize %wx png:- '%o'</converter>
+            <converter mimeType="text/plain">unoconv -d document -e PageRange=1-1 -f pdf --stdout '%f' | gs -dBATCH -dNOPAUSE -sDEVICE=pngalpha -dPDFFitPage -r72 -sOutputFile=- -q - | convert -resize %wx png:- '%o'</converter> 
+        </converters>
+        <converters target="pdf">
+            <converter mimeType="text/rtf">unoconv -d document -f pdf -o '%o' '%f'</converter>
+            <converter mimeType="application/msword">unoconv -d document -f pdf -o '%o' '%f'</converter>
+            <converter mimeType="application/vnd.oasis.opendocument.text">unoconv -d document -f pdf -o '%o' '%f'</converter>
+            <converter mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document">unoconv -d document -f pdf -o '%o' '%f'</converter>
+            <converter mimeType="application/vnd.ms-excel">unoconv -d spreadsheet -f pdf -o '%o' '%f'</converter>
+            <converter mimeType="application/vnd.oasis.opendocument.spreadsheet">unoconv -d spreadsheet -f pdf -o '%o' '%f'</converter>
+            <converter mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">unoconv -d spreadsheet -f pdf -o '%o' '%f'</converter>
+            <converter mimeType="application/vnd.ms-powerpoint">unoconv -d presentation -f pdf -o '%o' '%f'</converter>
+            <converter mimeType="application/vnd.oasis.opendocument.presentation">unoconv -d presentation -f pdf -o '%o' '%f'</converter>
+            <converter mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation">unoconv -d presentation -f pdf -o '%o' '%f'</converter>
+            <converter mimeType="text/html">unoconv -d document -f pdf -o '%o' '%f'</converter>
+            <converter mimeType="text/plain">unoconv -d document -f pdf -o '%o' '%f'</converter>
+        </converters>
+    </advanced>
+    <extensions/>
+</configuration>

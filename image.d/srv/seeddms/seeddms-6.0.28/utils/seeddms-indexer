@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ -z "${SEEDDMS_HOME}" ]; then
+    parentdir=$(dirname "$0")
+    export SEEDDMS_HOME=$(dirname "$parentdir")
+fi
+
+# Prevent indexer jobs to run simultaneously by using a file lock
+(
+    if ! flock -n 3; then 
+        echo "Previous indexer job is still running" >&2
+        exit 1
+    fi
+    export LD_PRELOAD=/usr/lib/preloadable_libiconv.so
+    php -f "${SEEDDMS_HOME}/utils/indexer.php" -- "${@}"
+) 3>/srv/seeddms/indexer.lock

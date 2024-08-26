@@ -1,0 +1,4 @@
+#!/bin/execlineb -P
+
+/bin/fdmove -c 2 1
+/usr/sbin/crond -f -d 8
